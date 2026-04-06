@@ -1,0 +1,35 @@
+{
+  "name": "@avatar-widget/widget",
+  "version": "0.1.0",
+  "description": "3D Avatar Widget - Embeddable customer support widget",
+  "type": "module",
+  "main": "dist/avatar-widget.umd.js",
+  "module": "dist/avatar-widget.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "three": "^0.160.0",
+    "@react-three/fiber": "^8.15.0",
+    "@react-three/drei": "^9.92.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/three": "^0.160.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0"
+  },
+  "keywords": ["avatar", "3d", "widget", "chatbot"],
+  "author": "",
+  "license": "MIT"
+}

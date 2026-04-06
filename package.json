@@ -1,0 +1,12 @@
+{
+  "name": "avatar-ai",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "dev:widget": "npm run dev --workspace=packages/widget",
+    "dev:backend": "npm run dev --workspace=packages/backend",
+    "dev:landing": "npm run dev --workspace=packages/landing",
+    "build": "npm run build --workspaces"
+  }
+}
