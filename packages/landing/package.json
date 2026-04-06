@@ -1,5 +1,12 @@
 {
   "name": "@avatar-ai/landing",
   "version": "0.1.0",
-  "description": "Avatar AI landing page and waitlist"
+  "description": "Avatar AI landing page and waitlist",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "^37.0.0"
+  }
 }
