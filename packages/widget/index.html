@@ -3,335 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TechStore Pro - Premium Electronics</title>
+    <title>Avatar Widget — Dev</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background: #f9fafb;
-      }
-
-      header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 1.5rem 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      }
-
-      nav {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      nav h1 {
-        font-size: 1.8rem;
-        font-weight: 700;
-      }
-
-      nav ul {
-        display: flex;
-        list-style: none;
-        gap: 2rem;
-      }
-
-      nav a {
-        color: white;
-        text-decoration: none;
-        font-weight: 500;
-        transition: opacity 0.2s;
-      }
-
-      nav a:hover {
-        opacity: 0.8;
-      }
-
-      .hero {
-        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-        padding: 4rem 2rem;
-        text-align: center;
-      }
-
-      .hero h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        color: #2c3e50;
-      }
-
-      .hero p {
-        font-size: 1.2rem;
-        color: #666;
-        max-width: 600px;
-        margin: 0 auto 2rem;
-      }
-
-      .cta-button {
-        display: inline-block;
-        padding: 1rem 2rem;
-        background: #667eea;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-
-      .cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-      }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 3rem 2rem;
-      }
-
-      .products {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-      }
-
-      .product-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        transition: transform 0.3s, box-shadow 0.3s;
-      }
-
-      .product-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-      }
-
-      .product-icon {
-        width: 100%;
-        height: 180px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 4rem;
-        margin-bottom: 1rem;
-      }
-
-      .product-card h3 {
-        font-size: 1.3rem;
-        margin-bottom: 0.5rem;
-        color: #2c3e50;
-      }
-
-      .product-card p {
-        color: #666;
-        margin-bottom: 1rem;
-        font-size: 0.95rem;
-      }
-
-      .price {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #667eea;
-        margin-bottom: 1rem;
-      }
-
-      .buy-button {
-        width: 100%;
-        padding: 0.75rem;
-        background: #667eea;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-
-      .buy-button:hover {
-        background: #5568d3;
-      }
-
-      .features {
-        background: white;
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 3rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      }
-
-      .features h3 {
-        font-size: 1.8rem;
-        margin-bottom: 1.5rem;
-        color: #2c3e50;
-      }
-
-      .feature-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-      }
-
-      .feature-item {
-        text-align: center;
-      }
-
-      .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 0.5rem;
-      }
-
-      .feature-item h4 {
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-        color: #2c3e50;
-      }
-
-      .feature-item p {
-        color: #666;
-        font-size: 0.9rem;
-      }
-
-      footer {
-        background: #2c3e50;
-        color: white;
-        text-align: center;
-        padding: 2rem;
-        margin-top: 3rem;
-      }
-
-      .badge {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        background: rgba(102, 126, 234, 0.95);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 50px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 1000;
-      }
+      body { font-family: system-ui, sans-serif; background: #f0f0f0; margin: 0; }
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 40px; }
+      .card { background: white; border-radius: 12px; padding: 20px; cursor: pointer;
+              box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+      .card h3 { font-size: 15px; color: #333; margin-bottom: 6px; }
+      .card .price { font-weight: 700; color: #667eea; }
     </style>
   </head>
   <body>
-    <div class="badge">✨ Live Demo with AI Assistant</div>
-
-    <header>
-      <nav>
-        <h1>TechStore Pro</h1>
-        <ul>
-          <li><a href="#products">Products</a></li>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#support">Support</a></li>
-          <li><a href="#cart">Cart (0)</a></li>
-        </ul>
-      </nav>
-    </header>
-
-    <div class="hero">
-      <h2>Premium Tech at Unbeatable Prices</h2>
-      <p>Discover the latest gadgets and accessories. Free shipping on orders over $50!</p>
-      <a href="#products" class="cta-button">Shop Now</a>
+    <div style="background:#667eea;color:white;padding:20px 40px;font-size:20px;font-weight:700;">
+      Avatar Widget Dev Store
     </div>
-
-    <div class="container">
-      <div class="products" id="products">
-        <div class="product-card">
-          <div class="product-icon">🎧</div>
-          <h3>Wireless Headphones Pro</h3>
-          <p>Premium noise-canceling with 30hr battery life and crystal-clear sound</p>
-          <div class="price">$299.99</div>
-          <button class="buy-button">Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-          <div class="product-icon">⌚</div>
-          <h3>Smart Watch Ultra</h3>
-          <p>Track fitness, health metrics, and stay connected on the go</p>
-          <div class="price">$399.99</div>
-          <button class="buy-button">Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-          <div class="product-icon">📱</div>
-          <h3>Premium Phone Case</h3>
-          <p>Military-grade protection with sleek, minimalist design</p>
-          <div class="price">$49.99</div>
-          <button class="buy-button">Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-          <div class="product-icon">💻</div>
-          <h3>Laptop Stand Pro</h3>
-          <p>Ergonomic aluminum stand for better posture and productivity</p>
-          <div class="price">$79.99</div>
-          <button class="buy-button">Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-          <div class="product-icon">🖱️</div>
-          <h3>Wireless Mouse Elite</h3>
-          <p>Precision tracking with ergonomic design for all-day comfort</p>
-          <div class="price">$59.99</div>
-          <button class="buy-button">Add to Cart</button>
-        </div>
-
-        <div class="product-card">
-          <div class="product-icon">⌨️</div>
-          <h3>Mechanical Keyboard</h3>
-          <p>RGB backlit with customizable switches and premium feel</p>
-          <div class="price">$149.99</div>
-          <button class="buy-button">Add to Cart</button>
-        </div>
+    <div class="grid">
+      <div class="card" data-product-id="headphones-001" data-product-name="Sony WH-1000XM5">
+        <h3>Sony WH-1000XM5</h3>
+        <div class="price">$349</div>
       </div>
-
-      <div class="features" id="features">
-        <h3>Why Choose TechStore Pro?</h3>
-        <div class="feature-grid">
-          <div class="feature-item">
-            <div class="feature-icon">🚚</div>
-            <h4>Free Shipping</h4>
-            <p>On all orders over $50</p>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon">🔒</div>
-            <h4>Secure Checkout</h4>
-            <p>256-bit SSL encryption</p>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon">↩️</div>
-            <h4>30-Day Returns</h4>
-            <p>Hassle-free return policy</p>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon">💬</div>
-            <h4>24/7 Support</h4>
-            <p>AI-powered assistance</p>
-          </div>
-        </div>
+      <div class="card" data-product-id="watch-001" data-product-name="Apple Watch Series 9">
+        <h3>Apple Watch Series 9</h3>
+        <div class="price">$399</div>
+      </div>
+      <div class="card" data-product-id="keyboard-001" data-product-name="Keychron Q1 Pro">
+        <h3>Keychron Q1 Pro</h3>
+        <div class="price">$199</div>
       </div>
     </div>
-
-    <footer>
-      <p>&copy; 2024 TechStore Pro. All rights reserved.</p>
-      <p style="margin-top: 0.5rem; opacity: 0.8;">Demo website showcasing AI Avatar Widget</p>
-    </footer>
-
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module">
+      import('/src/index.tsx').then(() => {
+        if (window.AvatarWidget) {
+          window.AvatarWidget.init({
+            apiEndpoint: 'http://localhost:3001/chat',
+            initialMessage: "Hi! I'm your AI shopping assistant. Ask me about any product!",
+          })
+        }
+      })
+    </script>
   </body>
 </html>
