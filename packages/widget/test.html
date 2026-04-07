@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avatar Widget — Phase 2 Test Store</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f5f5f5; }
+    header { background: #667eea; color: white; padding: 20px 40px; font-size: 22px; font-weight: 700; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; padding: 40px; max-width: 1100px; margin: 0 auto; }
+    .product-card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.13); }
+    .product-card h3 { margin-top: 12px; font-size: 16px; color: #2c3e50; }
+    .product-card p { margin-top: 6px; font-size: 13px; color: #888; }
+    .product-card .price { margin-top: 10px; font-size: 18px; font-weight: 700; color: #667eea; }
+  </style>
+</head>
+<body>
+<header>Test Store — Avatar Widget Phase 2</header>
+<div class="product-grid">
+  <div class="product-card" data-product-id="headphones-001" data-product-name="Sony WH-1000XM5">
+    <div style="height:140px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:8px;"></div>
+    <h3>Sony WH-1000XM5</h3>
+    <p>Industry-leading noise cancellation</p>
+    <div class="price">$349</div>
+  </div>
+  <div class="product-card" data-product-id="watch-001" data-product-name="Apple Watch Series 9">
+    <div style="height:140px;background:linear-gradient(135deg,#f093fb,#f5576c);border-radius:8px;"></div>
+    <h3>Apple Watch Series 9</h3>
+    <p>Health monitoring & fitness tracking</p>
+    <div class="price">$399</div>
+  </div>
+  <div class="product-card" data-product-id="keyboard-001" data-product-name="Keychron Q1 Pro">
+    <div style="height:140px;background:linear-gradient(135deg,#4facfe,#00f2fe);border-radius:8px;"></div>
+    <h3>Keychron Q1 Pro</h3>
+    <p>Wireless mechanical keyboard</p>
+    <div class="price">$199</div>
+  </div>
+  <div class="product-card" data-product-id="mouse-001" data-product-name="Logitech MX Master 3">
+    <div style="height:140px;background:linear-gradient(135deg,#43e97b,#38f9d7);border-radius:8px;"></div>
+    <h3>Logitech MX Master 3</h3>
+    <p>Ergonomic wireless mouse</p>
+    <div class="price">$99</div>
+  </div>
+  <div class="product-card" data-product-id="monitor-001" data-product-name="LG UltraWide 34">
+    <div style="height:140px;background:linear-gradient(135deg,#fa709a,#fee140);border-radius:8px;"></div>
+    <h3>LG UltraWide 34"</h3>
+    <p>34" curved ultrawide display</p>
+    <div class="price">$799</div>
+  </div>
+  <div class="product-card" data-product-id="stand-001" data-product-name="Ergotron LX Arm">
+    <div style="height:140px;background:linear-gradient(135deg,#a18cd1,#fbc2eb);border-radius:8px;"></div>
+    <h3>Ergotron LX Arm</h3>
+    <p>Adjustable monitor arm</p>
+    <div class="price">$149</div>
+  </div>
+</div>
+</body>
+</html>
