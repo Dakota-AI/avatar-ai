@@ -66,11 +66,9 @@ export function useAvatarState({
   }, [state, inactivityTimeoutMs, clearInactivityTimer])
 
   const interact = useCallback(() => {
-    if (state === 'greeting' || state === 'visible') {
-      clearGreetingTimer()
-      setState('visible')
-    }
-  }, [state, clearGreetingTimer])
+    clearGreetingTimer()
+    setState(prev => (prev === 'greeting' || prev === 'visible') ? 'visible' : prev)
+  }, [clearGreetingTimer])
 
   const greet = useCallback(() => {
     clearGreetingTimer()
@@ -99,12 +97,15 @@ export function useAvatarState({
   }, [clearGreetingTimer, clearInactivityTimer])
 
   const resetInactivityTimer = useCallback(() => {
-    if (state !== 'visible') return
     clearInactivityTimer()
-    inactivityTimerRef.current = setTimeout(() => {
-      setState('walking-off')
-    }, inactivityTimeoutMs)
-  }, [state, inactivityTimeoutMs, clearInactivityTimer])
+    setState(prev => {
+      if (prev !== 'visible') return prev
+      inactivityTimerRef.current = setTimeout(() => {
+        setState('walking-off')
+      }, inactivityTimeoutMs)
+      return prev
+    })
+  }, [inactivityTimeoutMs, clearInactivityTimer])
 
   return {
     state,

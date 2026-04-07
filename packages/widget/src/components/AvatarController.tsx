@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { PerspectiveCamera } from '@react-three/drei'
 import { useAvatarState } from '../hooks/useAvatarState'
@@ -31,6 +31,7 @@ export function AvatarController({
   const [currentAnimation, setCurrentAnimation] = useState<AvatarAnimation>('idle')
   const [isWalkingIn, setIsWalkingIn] = useState(false)
   const [isWalkingOff, setIsWalkingOff] = useState(false)
+  const talkTimerRef = useRef<ReturnType<typeof setTimeout>>()
 
   useEffect(() => {
     if (state === 'greeting') {
@@ -54,7 +55,8 @@ export function AvatarController({
   const handleWalkInComplete = useCallback(() => {
     setCurrentAnimation('wave')
     setSpeechText(initialMessage)
-    setTimeout(() => setCurrentAnimation('idle'), 2500)
+    clearTimeout(talkTimerRef.current)
+    talkTimerRef.current = setTimeout(() => setCurrentAnimation('idle'), 2500)
   }, [initialMessage])
 
   const handleWalkOffComplete = useCallback(() => {
@@ -69,8 +71,9 @@ export function AvatarController({
     setCurrentAnimation('talk')
     setSpeechText(`Let me tell you about ${lastClickedProduct.name}!`)
     resetInactivityTimer()
-    setTimeout(() => setCurrentAnimation('idle'), 2500)
-  }, [lastClickedProduct])
+    clearTimeout(talkTimerRef.current)
+    talkTimerRef.current = setTimeout(() => setCurrentAnimation('idle'), 2500)
+  }, [lastClickedProduct, interact, resetInactivityTimer])
 
   const handleSend = useCallback(async (message: string) => {
     interact()
@@ -98,14 +101,18 @@ export function AvatarController({
       }
 
       const talkMs = Math.min(data.response.length * 35, 4500)
-      setTimeout(() => setCurrentAnimation('idle'), talkMs)
+      clearTimeout(talkTimerRef.current)
+      talkTimerRef.current = setTimeout(() => setCurrentAnimation('idle'), talkMs)
     } catch {
       setIsTyping(false)
       setSpeechText("Sorry, I had trouble connecting. Please try again!")
       setCurrentAnimation('talk')
-      setTimeout(() => setCurrentAnimation('idle'), 2000)
+      clearTimeout(talkTimerRef.current)
+      talkTimerRef.current = setTimeout(() => setCurrentAnimation('idle'), 2000)
     }
   }, [apiEndpoint, sessionId, pageContext, products, interact, resetInactivityTimer])
+
+  useEffect(() => () => clearTimeout(talkTimerRef.current), [])
 
   const showCanvas = state === 'greeting' || state === 'visible' || state === 'walking-off'
   const showChatUI = state === 'visible' || state === 'greeting'

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { DetectedProduct } from '../components/PageScanner'
 
 export interface PageContext {
@@ -27,11 +27,11 @@ export function usePageContext(): UsePageContextReturn {
     setLastClickedProduct(product)
   }, [])
 
-  const pageContext: PageContext = {
+  const pageContext: PageContext = useMemo(() => ({
     url: typeof window !== 'undefined' ? window.location.href : '',
     pageTitle: typeof document !== 'undefined' ? document.title : '',
     visibleProducts: products.map((p) => ({ id: p.id, name: p.name })),
-  }
+  }), [products])
 
   return {
     products,

@@ -89,6 +89,17 @@ function GLBAvatar({
   }, [])
 
   useEffect(() => {
+    if (isWalkingIn) {
+      walkInDoneRef.current = false
+      if (groupRef.current) groupRef.current.position.x = 6
+    }
+  }, [isWalkingIn])
+
+  useEffect(() => {
+    if (isWalkingOff) walkOffDoneRef.current = false
+  }, [isWalkingOff])
+
+  useEffect(() => {
     if (!actions) return
     const target = findClip(actions, currentAnimation)
     if (!target) return

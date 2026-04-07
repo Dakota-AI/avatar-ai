@@ -8,23 +8,59 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
+// Simple in-memory rate limiter (no extra dependency)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
+const RATE_LIMIT = 30 // requests per window
+const RATE_WINDOW = 60000 // 1 minute
+
+function rateLimit(ip: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(ip)
+  if (!entry || now > entry.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_WINDOW })
+    return true
+  }
+  entry.count++
+  return entry.count <= RATE_LIMIT
+}
+
+function sanitizeString(str: string | undefined, maxLength: number): string {
+  if (!str) return ''
+  return str.replace(/[<>"'`]/g, '').slice(0, maxLength)
+}
+
 // Initialize Anthropic client (optional - will use mock if no API key)
 const anthropic = process.env.ANTHROPIC_API_KEY
   ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   : null
 
-app.use(cors())
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://127.0.0.1:5173',
+  ],
+}))
 app.use(express.json())
 
 // Conversation history storage (in-memory for MVP)
 const conversations = new Map<string, Array<{ role: string; content: string }>>()
 
 app.post('/chat', async (req, res) => {
+  const clientIp = req.ip || req.socket.remoteAddress || 'unknown'
+  if (!rateLimit(clientIp)) {
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' })
+  }
+
   try {
     const { message, sessionId = 'default', products = [], pageContext } = req.body
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required' })
+    }
+
+    if (typeof message !== 'string' || message.length > 2000) {
+      return res.status(400).json({ error: 'Message must be a string under 2000 characters' })
     }
 
     if (!conversations.has(sessionId)) {
@@ -38,15 +74,24 @@ app.post('/chat', async (req, res) => {
     let targetProduct: string | null = null
 
     // Build page context string for system prompt
+    const safeTitle = sanitizeString(pageContext?.pageTitle, 100)
+    const safeUrl = sanitizeString(pageContext?.url, 200)
+    const safeProducts = (pageContext?.visibleProducts || products || [])
+      .slice(0, 20)
+      .map((p: { id: string; name: string }) => ({
+        id: sanitizeString(p.id, 50),
+        name: sanitizeString(p.name, 100),
+      }))
+
     const pageContextStr = pageContext
-      ? `\n\nCurrent page: ${pageContext.pageTitle} (${pageContext.url})` +
-        (pageContext.visibleProducts?.length
-          ? `\nVisible products on this page: ${pageContext.visibleProducts
+      ? `\n\nCurrent page: ${safeTitle} (${safeUrl})` +
+        (safeProducts.length
+          ? `\nVisible products on this page: ${safeProducts
               .map((p: { id: string; name: string }) => `${p.name} (id: ${p.id})`)
               .join(', ')}`
           : '')
-      : products.length > 0
-      ? `\n\nAvailable products: ${products.map((p: { id: string; name: string }) => `${p.name} (id: ${p.id})`).join(', ')}`
+      : products?.length > 0
+      ? `\n\nAvailable products: ${(products as Array<{id: string; name: string}>).slice(0, 20).map((p) => `${sanitizeString(p.name, 100)} (id: ${sanitizeString(p.id, 50)})`).join(', ')}`
       : ''
 
     if (anthropic) {
