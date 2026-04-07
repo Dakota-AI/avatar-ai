@@ -21,77 +21,76 @@ const conversations = new Map<string, Array<{ role: string; content: string }>>(
 
 app.post('/chat', async (req, res) => {
   try {
-    const { message, sessionId = 'default', products = [] } = req.body
+    const { message, sessionId = 'default', products = [], pageContext } = req.body
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required' })
     }
 
-    // Get or create conversation history
     if (!conversations.has(sessionId)) {
       conversations.set(sessionId, [])
     }
     const history = conversations.get(sessionId)!
 
-    // Add user message to history
     history.push({ role: 'user', content: message })
 
     let response: string
     let targetProduct: string | null = null
 
-    // Use Claude API if available, otherwise use mock response
+    // Build page context string for system prompt
+    const pageContextStr = pageContext
+      ? `\n\nCurrent page: ${pageContext.pageTitle} (${pageContext.url})` +
+        (pageContext.visibleProducts?.length
+          ? `\nVisible products on this page: ${pageContext.visibleProducts
+              .map((p: { id: string; name: string }) => `${p.name} (id: ${p.id})`)
+              .join(', ')}`
+          : '')
+      : products.length > 0
+      ? `\n\nAvailable products: ${products.map((p: { id: string; name: string }) => `${p.name} (id: ${p.id})`).join(', ')}`
+      : ''
+
     if (anthropic) {
       try {
-        const productList = products.length > 0
-          ? `\n\nAvailable products: ${products.map((p: any) => `${p.name} (id: ${p.id})`).join(', ')}`
-          : ''
-
         const claudeResponse = await anthropic.messages.create({
           model: 'claude-3-5-sonnet-20241022',
           max_tokens: 1024,
-          system: `You are a helpful customer support assistant for an e-commerce store. You are friendly, professional, and concise.
-Your goal is to help customers with product questions and resolve their issues quickly.${productList}
+          system: `You are a friendly, concise AI sales assistant embedded on a website as a 3D avatar. You greet visitors, answer product questions, and help them find what they need. Keep responses under 3 sentences when possible — you are speaking as a voice/chat avatar, not writing an essay.${pageContextStr}
 
-If the user asks about a specific product, include in your response: TARGET_PRODUCT:[product_id]
-For example: "These headphones are amazing! TARGET_PRODUCT:headphones"`,
-          messages: history.map(msg => ({
+If the user asks about a specific product visible on this page, include in your response: TARGET_PRODUCT:[product_id]
+Example: "These headphones are great for travel! TARGET_PRODUCT:headphones-001"`,
+          messages: history.map((msg) => ({
             role: msg.role as 'user' | 'assistant',
-            content: msg.content
-          }))
+            content: msg.content,
+          })),
         })
 
-        response = claudeResponse.content[0].type === 'text'
-          ? claudeResponse.content[0].text
-          : 'I apologize, but I had trouble processing that request.'
+        response =
+          claudeResponse.content[0].type === 'text'
+            ? claudeResponse.content[0].text
+            : 'I apologize, but I had trouble processing that request.'
 
-        // Extract target product if mentioned
-        const targetMatch = response.match(/TARGET_PRODUCT:(\w+)/)
+        const targetMatch = response.match(/TARGET_PRODUCT:([\w-]+)/)
         if (targetMatch) {
           targetProduct = targetMatch[1]
-          response = response.replace(/TARGET_PRODUCT:\w+/g, '').trim()
+          response = response.replace(/TARGET_PRODUCT:[\w-]+/g, '').trim()
         }
-
       } catch (error) {
         console.error('Claude API error:', error)
         response = "I'm having trouble connecting right now. Please try again in a moment."
       }
     } else {
-      // Mock response for demo/development
-      const mockResult = getMockResponse(message, products)
+      const mockResult = getMockResponse(message, pageContext?.visibleProducts || products)
       response = mockResult.response
       targetProduct = mockResult.targetProduct
     }
 
-    // Add assistant response to history
     history.push({ role: 'assistant', content: response })
 
-    // Keep only last 10 messages to prevent memory issues
     if (history.length > 10) {
       history.splice(0, history.length - 10)
     }
 
     res.json({ response, sessionId, targetProduct })
-
   } catch (error) {
     console.error('Error:', error)
     res.status(500).json({ error: 'Internal server error' })
