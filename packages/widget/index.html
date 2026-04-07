@@ -31,15 +31,7 @@
         <div class="price">$199</div>
       </div>
     </div>
-    <script type="module">
-      import('/src/index.tsx').then(() => {
-        if (window.AvatarWidget) {
-          window.AvatarWidget.init({
-            apiEndpoint: 'http://localhost:3001/chat',
-            initialMessage: "Hi! I'm your AI shopping assistant. Ask me about any product!",
-          })
-        }
-      })
-    </script>
+    <div id="avatar-widget-root"></div>
+    <script type="module" src="/src/dev.tsx"></script>
   </body>
 </html>
